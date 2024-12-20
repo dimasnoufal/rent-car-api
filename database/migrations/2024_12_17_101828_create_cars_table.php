@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
+            $table->string('code_car')->unique();
             $table->string('image');
             $table->string('name');
             $table->string('year');
-            $table->string('rating');
-            $table->string('about');
-            $table->string('price');
-
+            $table->string('rating')->default('0');
+            $table->string('about')->nullable();
+            $table->bigInteger('price')->default(0);
+            $table->bigInteger('quantity')->default(1);
+            $table->string('feature1');
+            $table->string('feature2')->nullable();
+            $table->string('feature3')->nullable();
+            $table->string('feature4')->nullable();
             $table->timestamps();
         });
     }

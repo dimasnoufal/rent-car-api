@@ -33,6 +33,8 @@ class BookingController extends Controller
         try {
 
             $validator = Validator::make($request->all(), [
+                'nama_mobil' => 'required|string|max:255',
+                'tahun_mobil' => 'required|string|max:255',
                 'alamat' => 'required|string|max:255',
                 'tanggal_pemesanan' => 'required|string|max:255',
                 'tanggal_pengembalian' => 'required|string|max:255',
@@ -70,6 +72,8 @@ class BookingController extends Controller
             $booking = Booking::create([
                 'account_id' => $accountId,
                 'car_id' => $carId,
+                'nama_mobil' => $request->nama_mobil,
+                'tahun_mobil' => $request->tahun_mobil,
                 'alamat' => $request->alamat,
                 'tanggal_pemesanan' => $request->tanggal_pemesanan,
                 'tanggal_pengembalian' => $request->tanggal_pengembalian,
@@ -104,12 +108,21 @@ class BookingController extends Controller
                 return ResponseFormatter::error(null, 'Booking not found', 404);
             }
 
+            // Periksa apakah status diubah menjadi 'done'
+            if ($request->status === 'DONE') {
+                $car = Car::find($booking->car_id);
+                if ($car) {
+                    $car->quantity += 1;
+                    $car->save();
+                }
+            }
+
             $booking->status = $request->status;
             $booking->save();
 
             return ResponseFormatter::success($booking, 'Booking status updated');
         } catch (Exception $exception) {
-            return ResponseFormatter::error(null, $exception);
+            return ResponseFormatter::error(null, $exception->getMessage());
         }
     }
 }

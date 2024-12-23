@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('account_id');
             $table->bigInteger('car_id');
+            $table->string('nama_mobil');
+            $table->string('tahun_mobil');
             $table->string('alamat');
             $table->string('tanggal_pemesanan');
             $table->string('tanggal_pengembalian');
